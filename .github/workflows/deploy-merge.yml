@@ -1,0 +1,38 @@
+on:
+    pull_request:
+
+    workflow_dispatch:
+  
+permissions:
+    id-token: write # Require write permission to Fetch an OIDC token (required for federated credential) and write it, it will be automatically used on actions / cli that need it
+  
+env: 
+    AZURE_RG_NAME: ${{ vars.PROJECT_NAME }}-rg-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
+    
+jobs:
+  
+    build_publish_backend:
+      runs-on: ubuntu-latest
+      environment: production
+  
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Publish the app
+        run: dotnet publish -c Release --property:PublishDir=publish # Publish the app to the publish folder of the API project
+        working-directory: ./backend # specify where to find the solution file
+  
+    build_frontend:
+      runs-on: ubuntu-latest
+      environment: production
+  
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+  
+      - name: Build the app
+        run: npm install && npm run build
+        working-directory: ./frontend
+  
+    
