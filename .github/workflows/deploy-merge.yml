@@ -1,13 +1,8 @@
 on:
     pull_request:
-
-    workflow_dispatch:
   
 permissions:
     id-token: write # Require write permission to Fetch an OIDC token (required for federated credential) and write it, it will be automatically used on actions / cli that need it
-  
-env: 
-    AZURE_RG_NAME: ${{ vars.PROJECT_NAME }}-rg-${{ vars.AZURE_RESOURCE_IDENTIFIER }}
     
 jobs:
   
@@ -32,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
   
       - name: Build the app
-        run: npm install && npm run build
+        run: npm install && npm run lint && npm run build
         working-directory: ./frontend
   
     
